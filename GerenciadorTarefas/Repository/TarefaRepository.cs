@@ -1,42 +1,69 @@
-﻿using GerenciadorTarefas.Data;
+﻿using Dapper;
+using GerenciadorTarefas.Data;
 using GerenciadorTarefas.Model;
 using GerenciadorTarefas.Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace GerenciadorTarefas.Repository
 {
     public class TarefaRepository : ITarefaRepository
     {
-        private readonly DbContext _context;
-        public TarefaRepository(DbContext context)
+        private readonly IDbConnection _connection;
+        public TarefaRepository(IDbConnection connection)
         {
-            _context = context;
+            _connection = connection;
         }
-        public Task<Tarefa> CreateAsync(Tarefa tarefa)
+        public async Task<IEnumerable<Tarefa>> GetAllAsync()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Delete(Guid id)
-        {
-            throw new NotImplementedException();
+            var sqlQuery = "SELECT * FROM Tarefa";
+            return await _connection.QueryAsync<Tarefa>(sqlQuery);
         }
 
-        public Task<IEnumerable<Tarefa>> GetAllAsync()
+        public async Task<Tarefa> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            string sqlQuery = "SELECT FROM Tarefa WHERE Id = @id";
+            return await _connection.QuerySingleOrDefaultAsync<Tarefa>(sqlQuery, new {id});
         }
 
-        public Task<Tarefa> GetByIdAsync(Guid id)
+        public async Task<Tarefa> CreateAsync(Tarefa tarefa)
         {
-            throw new NotImplementedException();
+            tarefa.Id = Guid.NewGuid();
+            tarefa.DataCriacao = DateTime.Now;
+            string sqlQuery = "INSERT INTO Tarefas (Titulo, Descricao, DataCriacao, DataFinalizacao, Status) " +
+                "VALUES (@Id, @Titulo, @Descricao, @DataCriacao, @DataFinalizacao, @Status)";
+
+            var linhasAfetadas =  await _connection.ExecuteAsync(sqlQuery, tarefa);
+            return linhasAfetadas > 0 ? tarefa : null;
+
+        }
+        public async Task<bool> UpdateAsync(Tarefa tarefa)
+        {
+            string sqlString = "UPDATE Tarefa SET @Titulo, @Descricao, @DataCriacao, @DataFinalizacao, @Status WHERE Id = @Id";
+
+            var linhasAlteradas = await _connection.ExecuteAsync(sqlString, new 
+            {
+                tarefa.Id,
+                tarefa.Titulo,
+                tarefa.Descricao,
+                tarefa.DataCriacao,
+                tarefa.DataFinalizacao,
+                tarefa.Status 
+            });
+
+            return linhasAlteradas > 0;
         }
 
-        public Task<Tarefa> UpdateAsync(Tarefa tarefa)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            string sqlQuery = "DELETE FROM Tarefa WHERE ID = @id";
+            var linhasAfetadas = await _connection.ExecuteAsync(sqlQuery, new {id});
+
+            return linhasAfetadas > 0;
         }
+
+
     }
 }

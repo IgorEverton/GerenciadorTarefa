@@ -11,8 +11,8 @@ namespace GerenciadorTarefas.Repository.Interface
         Task<IEnumerable<Tarefa>> GetAllAsync();
         Task<Tarefa> GetByIdAsync(Guid id);
         Task<Tarefa> CreateAsync(Tarefa tarefa);
-        Task<Tarefa> UpdateAsync(Tarefa tarefa);
-        Task<bool> Delete(Guid id);
+        Task<bool> UpdateAsync(Tarefa tarefa);
+        Task<bool> DeleteAsync(Guid id);
 
     }
 }
