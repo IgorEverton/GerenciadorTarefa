@@ -1,16 +1,17 @@
+using GerenciadorTarefas.Repository.Interface;
+using GerenciadorTarefas.Repository;
+using GerenciadorTarefas.Service.Interface;
+using GerenciadorTarefas.Service;
+using GerenciadorTarefas.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Data;
+using FluentValidation;
 
 namespace GerenciadorTarefas
 {
@@ -23,9 +24,13 @@ namespace GerenciadorTarefas
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IDbConnection>(db => new SqlConnection(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<ITarefaRepository, TarefaRepository>();
+            services.AddScoped<ITarefaService, TarefaService>();
+            services.AddScoped<TarefaTestService>();
+            services.AddValidatorsFromAssemblyContaining<TarefaValidator>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -35,7 +40,7 @@ namespace GerenciadorTarefas
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceScopeFactory serviceScopeFactory)
         {
             if (env.IsDevelopment())
             {
@@ -43,11 +48,14 @@ namespace GerenciadorTarefas
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GerenciadorTarefas v1"));
             }
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
+                var testService = scope.ServiceProvider.GetRequiredService<TarefaTestService>();
+                testService.CriarTarefaExemplo().Wait(); // Aguarda a execução do método assíncrono
+            }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -55,5 +63,6 @@ namespace GerenciadorTarefas
                 endpoints.MapControllers();
             });
         }
+
     }
 }

@@ -32,7 +32,7 @@ namespace GerenciadorTarefas.Repository
         {
             tarefa.Id = Guid.NewGuid();
             tarefa.DataCriacao = DateTime.Now;
-            string sqlQuery = "INSERT INTO Tarefas (Titulo, Descricao, DataCriacao, DataFinalizacao, Status) " +
+            string sqlQuery = "INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status) " +
                 "VALUES (@Id, @Titulo, @Descricao, @DataCriacao, @DataFinalizacao, @Status)";
 
             var linhasAfetadas =  await _connection.ExecuteAsync(sqlQuery, tarefa);

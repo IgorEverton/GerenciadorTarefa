@@ -19,6 +19,7 @@ namespace GerenciadorTarefas.Service
             _validator = validator;
         }
 
+
         public Task<IEnumerable<Tarefa>> GetAllAsync()
         {
             return _repository.GetAllAsync();
@@ -56,4 +57,6 @@ namespace GerenciadorTarefas.Service
             return await _repository.UpdateAsync(tarefa);
         }
     }
+
+
 }
