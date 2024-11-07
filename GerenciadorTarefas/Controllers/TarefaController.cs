@@ -26,7 +26,7 @@ namespace GerenciadorTarefas.Controllers
         [HttpGet("retornar-tarefa/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var tarefaEncontrada = _tarefaService.GetByIdAsync(id);
+            var tarefaEncontrada = await _tarefaService.GetByIdAsync(id);
             if(tarefaEncontrada != null)
             {
                 return Ok(tarefaEncontrada);
@@ -36,11 +36,20 @@ namespace GerenciadorTarefas.Controllers
         [HttpPost("inserir-tarefa")]
         public async Task<IActionResult> PostTarefa([FromBody]Tarefa tarefa)
         {
+            if (tarefa == null) return BadRequest("Campos não podem ser nulos");
+
             try
             {
-                if(tarefa == null) return BadRequest("Tafera não pode ser nula");
-                var tarefaCriada = _tarefaService.CreateAsync(tarefa);
-                return  CreatedAtAction(nameof(GetById), new {id = tarefaCriada.Id}, tarefaCriada);
+                tarefa.Id = Guid.NewGuid();
+                tarefa.DataCriacao = DateTime.Now;
+                var tarefaCriada = await _tarefaService.CreateAsync(tarefa);
+
+                // Teste de serialização manual
+                var serializedData = System.Text.Json.JsonSerializer.Serialize(tarefaCriada);
+
+                return CreatedAtAction(nameof(GetById), new { id = tarefaCriada.Id }, tarefaCriada);
+            
+                //CreatedAtAction(nameof(GetById), new {id = tarefaCriada.Id}, tarefaCriada);
             }
             catch (Exception ex) 
             { 
@@ -50,7 +59,7 @@ namespace GerenciadorTarefas.Controllers
         [HttpPut("atualizar-tarefa")]
         public async Task<IActionResult> PutTarefa([FromBody]Tarefa tarefa)
         {
-            if (tarefa != null) return BadRequest("Tarefa não pode ser nula");
+            if (tarefa == null) return BadRequest("Tarefa não pode ser nula");
             try
             {
                 var linhasAtualizas = await _tarefaService.UpdateAsync(tarefa);

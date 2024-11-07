@@ -18,14 +18,14 @@ namespace GerenciadorTarefas.Repository
         }
         public async Task<IEnumerable<Tarefa>> GetAllAsync()
         {
-            var sqlQuery = "SELECT * FROM Tarefa";
+            var sqlQuery = "SELECT * FROM Tarefas";
             return await _connection.QueryAsync<Tarefa>(sqlQuery);
         }
 
         public async Task<Tarefa> GetByIdAsync(Guid id)
         {
-            string sqlQuery = "SELECT FROM Tarefa WHERE Id = @id";
-            return await _connection.QuerySingleOrDefaultAsync<Tarefa>(sqlQuery, new {id});
+            string sqlQuery = "SELECT Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status FROM Tarefas WHERE Id = @Id";
+            return await _connection.QuerySingleOrDefaultAsync<Tarefa>(sqlQuery, new { Id = id });
         }
 
         public async Task<Tarefa> CreateAsync(Tarefa tarefa)
@@ -41,7 +41,7 @@ namespace GerenciadorTarefas.Repository
         }
         public async Task<bool> UpdateAsync(Tarefa tarefa)
         {
-            string sqlString = "UPDATE Tarefa SET @Titulo, @Descricao, @DataCriacao, @DataFinalizacao, @Status WHERE Id = @Id";
+            string sqlString = "UPDATE Tarefas SET Titulo = @Titulo, Descricao = @Descricao, DataCriacao = @DataCriacao, DataFinalizacao = @DataFinalizacao, Status = @Status WHERE Id = @Id";
 
             var linhasAlteradas = await _connection.ExecuteAsync(sqlString, new 
             {
@@ -58,7 +58,12 @@ namespace GerenciadorTarefas.Repository
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            string sqlQuery = "DELETE FROM Tarefa WHERE ID = @id";
+            string sqlQueryVerificar = "SELECT COUNT(1) FROM Tarefas WHERE Id = @id";
+            var tarefaEncontrada = await _connection.ExecuteScalarAsync<int>(sqlQueryVerificar, new {id});
+
+            if(tarefaEncontrada < 0) return false;
+
+            string sqlQuery = "DELETE FROM Tarefas WHERE ID = @id";
             var linhasAfetadas = await _connection.ExecuteAsync(sqlQuery, new {id});
 
             return linhasAfetadas > 0;

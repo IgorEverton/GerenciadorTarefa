@@ -32,11 +32,7 @@ namespace GerenciadorTarefas
             services.AddScoped<TarefaTestService>();
             services.AddValidatorsFromAssemblyContaining<TarefaValidator>();
 
-            services.AddControllers()
-                    .AddJsonOptions(options =>
-                    {
-                        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                    });
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GerenciadorTarefas", Version = "v1" });
