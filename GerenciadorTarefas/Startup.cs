@@ -32,7 +32,11 @@ namespace GerenciadorTarefas
             services.AddScoped<TarefaTestService>();
             services.AddValidatorsFromAssemblyContaining<TarefaValidator>();
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                    });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GerenciadorTarefas", Version = "v1" });
@@ -47,11 +51,6 @@ namespace GerenciadorTarefas
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GerenciadorTarefas v1"));
-            }
-            using (var scope = serviceScopeFactory.CreateScope())
-            {
-                var testService = scope.ServiceProvider.GetRequiredService<TarefaTestService>();
-                testService.CriarTarefaExemplo().Wait(); // Aguarda a execução do método assíncrono
             }
 
             app.UseHttpsRedirection();
