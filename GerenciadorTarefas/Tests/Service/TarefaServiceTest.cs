@@ -3,17 +3,39 @@ using Moq;
 using GerenciadorTarefas.Repository.Interface;
 using GerenciadorTarefas.Service;
 using GerenciadorTarefas.Service.Interface;
+using System.Threading.Tasks;
+using System;
+using GerenciadorTarefas.Model;
+using FluentAssertions;
 
 namespace GerenciadorTarefas.Tests.Service
 {
     public class TarefaServiceTest
     {
         private readonly Mock<ITarefaRepository> _mockRespository;
-        private readonly TarefaService _TarefaService;
+        private readonly TarefaService _tarefaService;
         public TarefaServiceTest()
         {
             _mockRespository = new Mock<ITarefaRepository>();
-            _TarefaService = new TarefaService( _mockRespository.Object );
+            _tarefaService = new TarefaService( _mockRespository.Object );
+        }
+        [Fact]
+        public async Task CreateAsync_DeveChamarRepositoryERetornarTarefa()
+        {
+            var tarefa = new Tarefa
+            {
+                Id = Guid.NewGuid(),
+                Titulo = "Varrer o quintal",
+                Descricao = "Varrer o quintal toda a semana",
+                DataCriacao = DateTime.Now,
+                DataFinalizacao = DateTime.Now.AddDays(3),
+                Status = false
+            };
+            _mockRespository.Setup(resp => resp.CreateAsync(tarefa)).ReturnsAsync(tarefa);
+
+            var result = await _tarefaService.CreateAsync(tarefa);
+
+            result.Should().NotBeNull();
         }
     }
 }
