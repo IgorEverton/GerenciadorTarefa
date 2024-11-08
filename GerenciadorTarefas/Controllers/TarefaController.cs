@@ -1,4 +1,5 @@
-﻿using GerenciadorTarefas.Model;
+﻿using GerenciadorTarefas.Communication.Response;
+using GerenciadorTarefas.Model;
 using GerenciadorTarefas.Service;
 using GerenciadorTarefas.Service.Interface;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +35,7 @@ namespace GerenciadorTarefas.Controllers
             return BadRequest();
         }
         [HttpPost("inserir-tarefa")]
+        //[ProducesResponseType(typeof(ResponseTarefa), StatusCodes.Status201Created)]
         public async Task<IActionResult> PostTarefa([FromBody]Tarefa tarefa)
         {
             if (tarefa == null) return BadRequest("Campos não podem ser nulos");
@@ -63,7 +65,7 @@ namespace GerenciadorTarefas.Controllers
             try
             {
                 var linhasAtualizas = await _tarefaService.UpdateAsync(tarefa);
-                if(linhasAtualizas != null)
+                if(linhasAtualizas != false)
                 {
                     return Ok();
                 }
