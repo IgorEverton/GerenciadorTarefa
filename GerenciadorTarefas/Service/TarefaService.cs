@@ -18,7 +18,9 @@ namespace GerenciadorTarefas.Service
             _repository = repository;
             _validator = validator;
         }
-
+        public TarefaService(ITarefaRepository @object)
+        {
+        }
 
         public Task<IEnumerable<Tarefa>> GetAllAsync()
         {
