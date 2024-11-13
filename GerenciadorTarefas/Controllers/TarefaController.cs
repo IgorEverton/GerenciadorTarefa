@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using GerenciadorTarefas.Service.Mapper;
 
 namespace GerenciadorTarefas.Controllers
 {
@@ -15,9 +16,11 @@ namespace GerenciadorTarefas.Controllers
     public class TarefaController : ControllerBase
     {
         private readonly ITarefaService _tarefaService;
-        public TarefaController(ITarefaService tarefaService)
+        private readonly MappingTo _mapper;
+        public TarefaController(ITarefaService tarefaService, MappingTo mapper)
         {
             _tarefaService = tarefaService;
+            _mapper = mapper;
         }
 
         [HttpGet("retorna-tarefas")]
@@ -53,7 +56,9 @@ namespace GerenciadorTarefas.Controllers
                 // Teste de serialização manual
                 var serializedData = System.Text.Json.JsonSerializer.Serialize(result);
 
-                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+                var response = _mapper.MapToResponseTarefa(result);
+
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, response);
             
             }
             catch (Exception ex) 

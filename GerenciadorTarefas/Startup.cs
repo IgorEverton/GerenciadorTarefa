@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Data;
 using FluentValidation;
+using GerenciadorTarefas.Service.Mapper;
 
 namespace GerenciadorTarefas
 {
@@ -30,6 +31,8 @@ namespace GerenciadorTarefas
             services.AddScoped<ITarefaRepository, TarefaRepository>();
             services.AddScoped<ITarefaService, TarefaService>();
             services.AddValidatorsFromAssemblyContaining<TarefaValidator>();
+            services.AddSingleton<MappingTo>();
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
