@@ -7,8 +7,8 @@ namespace GerenciadorTarefas.Communication.Request
         public Guid Id { get; set; }
         public string Titulo { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;
-        public DateTime DataCriacao { get; set; }
+        public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
         public DateTime DataFinalizacao { get; set; }
-        public bool Status { get; set; } = false;
+        public bool Status { get; set; } = true;
     }
 }

@@ -1,15 +1,17 @@
-﻿using GerenciadorTarefas.Communication.Response;
+﻿using GerenciadorTarefas.Communication.Request;
+using GerenciadorTarefas.Communication.Response;
 using GerenciadorTarefas.Model;
-using GerenciadorTarefas.Service;
+using GerenciadorTarefas.Service.Mapper;
 using GerenciadorTarefas.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace GerenciadorTarefas.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TarefaController : ControllerBase
     {
@@ -18,12 +20,14 @@ namespace GerenciadorTarefas.Controllers
         {
             _tarefaService = tarefaService;
         }
+
         [HttpGet("retorna-tarefas")]
         public async Task<IActionResult> GetAll()
         {
             var tarefas = await _tarefaService.GetAllAsync();
-            return Ok(tarefas);
+            return Ok(tarefas ?? new List<Tarefa>());
         }
+
         [HttpGet("retornar-tarefa/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -34,30 +38,31 @@ namespace GerenciadorTarefas.Controllers
             }
             return BadRequest();
         }
+
         [HttpPost("inserir-tarefa")]
-        //[ProducesResponseType(typeof(ResponseTarefa), StatusCodes.Status201Created)]
-        public async Task<IActionResult> PostTarefa([FromBody]Tarefa tarefa)
+        [ProducesResponseType(typeof(ResponseTarefa), StatusCodes.Status201Created)]
+        public async Task<IActionResult> PostTarefa([FromBody]RequestTarefa request)
         {
-            if (tarefa == null) return BadRequest("Campos não podem ser nulos");
+
+            if (request == null) return BadRequest("Campos não podem ser nulos");
 
             try
             {
-                tarefa.Id = Guid.NewGuid();
-                tarefa.DataCriacao = DateTime.Now;
-                var tarefaCriada = await _tarefaService.CreateAsync(tarefa);
+                request.Id = Guid.NewGuid();
+                var result = await _tarefaService.CreateAsync(request);
 
                 // Teste de serialização manual
-                var serializedData = System.Text.Json.JsonSerializer.Serialize(tarefaCriada);
+                var serializedData = System.Text.Json.JsonSerializer.Serialize(result);
 
-                return CreatedAtAction(nameof(GetById), new { id = tarefaCriada.Id }, tarefaCriada);
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
             
-                //CreatedAtAction(nameof(GetById), new {id = tarefaCriada.Id}, tarefaCriada);
             }
             catch (Exception ex) 
             { 
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [HttpPut("atualizar-tarefa")]
         public async Task<IActionResult> PutTarefa([FromBody]Tarefa tarefa)
         {
@@ -76,6 +81,7 @@ namespace GerenciadorTarefas.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [HttpDelete("delete-tarefa/{id}")]
         public async Task<IActionResult> DeleteTarefa(Guid id)
         {

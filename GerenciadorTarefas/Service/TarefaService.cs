@@ -1,9 +1,13 @@
-﻿using FluentValidation;
+﻿using Azure.Core;
+using FluentValidation;
+using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Model;
+using GerenciadorTarefas.Repository;
 using GerenciadorTarefas.Repository.Interface;
 using GerenciadorTarefas.Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GerenciadorTarefas.Service
@@ -22,9 +26,15 @@ namespace GerenciadorTarefas.Service
         {
         }
 
-        public Task<IEnumerable<Tarefa>> GetAllAsync()
+        public async Task<IEnumerable<Tarefa>> GetAllAsync()
         {
-            return _repository.GetAllAsync();
+            if (_repository == null)
+            {
+                throw new InvalidOperationException("Repositório não foi injetado corretamente.");
+            }
+
+            var tarefas = await _repository.GetAllAsync();
+            return tarefas ?? Enumerable.Empty<Tarefa>(); // Garante que nunca será nulo
         }
 
         public Task<Tarefa> GetByIdAsync(Guid id)
@@ -32,10 +42,26 @@ namespace GerenciadorTarefas.Service
             return _repository.GetByIdAsync(id);
         }
 
-        public async Task<Tarefa> CreateAsync(Tarefa tarefa)
+        private Tarefa MapToTarefa(RequestTarefa request)
+        {
+            return new Tarefa
+            {
+                Id = request.Id,
+                Titulo = request.Titulo,
+                Descricao = request.Descricao,
+                DataCriacao = request.DataCriacao,
+                DataFinalizacao = request.DataFinalizacao,
+                Status = request.Status
+            };
+        }
+
+
+        public async Task<Tarefa> CreateAsync(RequestTarefa request)
         {
 
+            var tarefa = MapToTarefa(request);
             var resultValidator = await _validator.ValidateAsync(tarefa);
+
             if (!resultValidator.IsValid)
             {
                 throw new ValidationException(resultValidator.Errors);

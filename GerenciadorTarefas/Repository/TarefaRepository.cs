@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Data;
 using GerenciadorTarefas.Model;
 using GerenciadorTarefas.Repository.Interface;
@@ -14,7 +15,7 @@ namespace GerenciadorTarefas.Repository
         private readonly IDbConnection _connection;
         public TarefaRepository(IDbConnection connection)
         {
-            _connection = connection;
+            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         }
         public async Task<IEnumerable<Tarefa>> GetAllAsync()
         {
@@ -31,7 +32,6 @@ namespace GerenciadorTarefas.Repository
         public async Task<Tarefa> CreateAsync(Tarefa tarefa)
         {
             tarefa.Id = Guid.NewGuid();
-            tarefa.DataCriacao = DateTime.Now;
             string sqlQuery = "INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status) " +
                 "VALUES (@Id, @Titulo, @Descricao, @DataCriacao, @DataFinalizacao, @Status)";
 
