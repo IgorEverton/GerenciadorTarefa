@@ -15,7 +15,7 @@ namespace GerenciadorTarefas.Repository
         private readonly IDbConnection _connection;
         public TarefaRepository(IDbConnection connection)
         {
-            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            _connection = connection;
         }
         public async Task<IEnumerable<Tarefa>> GetAllAsync()
         {

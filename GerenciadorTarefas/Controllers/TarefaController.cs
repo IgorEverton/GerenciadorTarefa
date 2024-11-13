@@ -1,7 +1,6 @@
 ﻿using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Communication.Response;
 using GerenciadorTarefas.Model;
-using GerenciadorTarefas.Service.Mapper;
 using GerenciadorTarefas.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +24,7 @@ namespace GerenciadorTarefas.Controllers
         public async Task<IActionResult> GetAll()
         {
             var tarefas = await _tarefaService.GetAllAsync();
-            return Ok(tarefas ?? new List<Tarefa>());
+            return Ok(tarefas);
         }
 
         [HttpGet("retornar-tarefa/{id}")]
@@ -64,7 +63,7 @@ namespace GerenciadorTarefas.Controllers
         }
 
         [HttpPut("atualizar-tarefa")]
-        public async Task<IActionResult> PutTarefa([FromBody]Tarefa tarefa)
+        public async Task<IActionResult> PutTarefa([FromBody] RequestTarefa tarefa)
         {
             if (tarefa == null) return BadRequest("Tarefa não pode ser nula");
             try

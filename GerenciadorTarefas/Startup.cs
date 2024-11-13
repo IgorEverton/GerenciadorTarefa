@@ -29,7 +29,6 @@ namespace GerenciadorTarefas
             services.AddTransient<IDbConnection>(db => new SqlConnection(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ITarefaRepository, TarefaRepository>();
             services.AddScoped<ITarefaService, TarefaService>();
-            //services.AddScoped<TarefaTestService>();
             services.AddValidatorsFromAssemblyContaining<TarefaValidator>();
 
             services.AddControllers();
