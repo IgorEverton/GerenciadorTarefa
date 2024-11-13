@@ -1,9 +1,12 @@
 ﻿using FluentValidation;
+using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Model;
 using GerenciadorTarefas.Repository.Interface;
 using GerenciadorTarefas.Service.Interface;
+using GerenciadorTarefas.Service.Mapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GerenciadorTarefas.Service
@@ -11,20 +14,28 @@ namespace GerenciadorTarefas.Service
     public class TarefaService : ITarefaService
     {
         private readonly ITarefaRepository _repository;
-        private readonly IValidator<Tarefa> _validator;
+        private readonly IValidator<RequestTarefa> _validator;
+        private readonly MappingTo _mapper;
 
-        public TarefaService(ITarefaRepository repository, IValidator<Tarefa> validator)
+        public TarefaService(ITarefaRepository repository, IValidator<RequestTarefa> validator, MappingTo mapper)
         {
             _repository = repository;
             _validator = validator;
-        }
-        public TarefaService(ITarefaRepository @object)
-        {
+            _mapper = mapper;
         }
 
-        public Task<IEnumerable<Tarefa>> GetAllAsync()
+        public async Task<IEnumerable<RequestTarefa>> GetAllAsync()
         {
-            return _repository.GetAllAsync();
+            if (_repository == null)
+            {
+                throw new InvalidOperationException("Repositório não foi injetado corretamente.");
+            }
+
+            var tarefas = await _repository.GetAllAsync();
+
+            var requestTarefas = tarefas.Select(_mapper.MapToRequestTarefa);
+
+            return requestTarefas;
         }
 
         public Task<Tarefa> GetByIdAsync(Guid id)
@@ -32,14 +43,17 @@ namespace GerenciadorTarefas.Service
             return _repository.GetByIdAsync(id);
         }
 
-        public async Task<Tarefa> CreateAsync(Tarefa tarefa)
+        public async Task<Tarefa> CreateAsync(RequestTarefa request)
         {
 
-            var resultValidator = await _validator.ValidateAsync(tarefa);
+            //var tarefa = MapToTarefa(request);
+            var resultValidator = await _validator.ValidateAsync(request);
+
             if (!resultValidator.IsValid)
             {
                 throw new ValidationException(resultValidator.Errors);
             }
+            var tarefa = _mapper.MapToTarefa(request);
 
             return await _repository.CreateAsync(tarefa);
         }
@@ -49,13 +63,14 @@ namespace GerenciadorTarefas.Service
             return await _repository.DeleteAsync(id);
         }
 
-        public async Task<bool> UpdateAsync(Tarefa tarefa)
+        public async Task<bool> UpdateAsync(RequestTarefa request)
         {
-            var resultValidator = await _validator.ValidateAsync(tarefa);
+            var resultValidator = await _validator.ValidateAsync(request);
             if (!resultValidator.IsValid)
             {
                 throw new ValidationException(resultValidator.Errors);
             }
+            var tarefa = _mapper.MapToTarefa(request);
             return await _repository.UpdateAsync(tarefa);
         }
     }
