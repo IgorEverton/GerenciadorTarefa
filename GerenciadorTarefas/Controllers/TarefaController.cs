@@ -27,6 +27,12 @@ namespace GerenciadorTarefas.Controllers
         public async Task<IActionResult> GetAll()
         {
             var tarefas = await _tarefaService.GetAllAsync();
+
+            if(tarefas == null)
+            {
+                return NoContent();
+            }
+
             return Ok(tarefas);
         }
 
@@ -38,7 +44,8 @@ namespace GerenciadorTarefas.Controllers
             {
                 return Ok(tarefaEncontrada);
             }
-            return BadRequest();
+            return NotFound("Tarefa não encontrada");
+
         }
 
         [HttpPost("inserir-tarefa")]
@@ -78,7 +85,7 @@ namespace GerenciadorTarefas.Controllers
                 {
                     return Ok();
                 }
-                return BadRequest("Tafera não encontrada");
+                return NotFound("Tafera não encontrada");
             }
             catch (Exception ex) 
             {
