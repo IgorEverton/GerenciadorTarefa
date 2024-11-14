@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GerenciadorTarefas.Communication\GerenciadorTarefas.Communication.csproj" />
+    <ProjectReference Include="..\GerenciadorTarefas.Domain\GerenciadorTarefas.Domain.csproj" />
+    <ProjectReference Include="..\GerenciadorTarefas.Exceptions\GerenciadorTarefas.Exceptions.csproj" />
+  </ItemGroup>
+
+</Project>

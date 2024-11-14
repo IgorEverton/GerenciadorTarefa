@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
-using GerenciadorTarefas.Model;
-using GerenciadorTarefas.MenssageExceptions;
 using GerenciadorTarefas.Communication.Request;
+using GerenciadorTarefas.Exceptions.MenssageExceptions;
 
 namespace GerenciadorTarefas.Validation
 {

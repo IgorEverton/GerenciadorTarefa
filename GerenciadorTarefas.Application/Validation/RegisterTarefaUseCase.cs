@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using GerenciadorTarefas.Communication.Request;
+﻿using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Communication.Response;
 using GerenciadorTarefas.MenssageExceptions.ExceptionBase;
 using System.Linq;

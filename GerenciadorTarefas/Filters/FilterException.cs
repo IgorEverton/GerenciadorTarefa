@@ -1,5 +1,5 @@
 ﻿using GerenciadorTarefas.Communication.Response;
-using GerenciadorTarefas.MenssageExceptions;
+using GerenciadorTarefas.Exceptions.MenssageExceptions;
 using GerenciadorTarefas.MenssageExceptions.ExceptionBase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

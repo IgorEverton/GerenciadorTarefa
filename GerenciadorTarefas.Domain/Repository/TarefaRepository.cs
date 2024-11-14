@@ -1,6 +1,4 @@
 ﻿using Dapper;
-using GerenciadorTarefas.Communication.Request;
-using GerenciadorTarefas.Data;
 using GerenciadorTarefas.Model;
 using GerenciadorTarefas.Repository.Interface;
 using System;

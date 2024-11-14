@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GerenciadorTarefas.MenssageExceptions {
+namespace GerenciadorTarefas.Exceptions.MenssageExceptions {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace GerenciadorTarefas.MenssageExceptions {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GerenciadorTarefas.MenssageExceptions.ResourceMenssagesException", typeof(ResourceMenssagesException).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GerenciadorTarefas.Exceptions.MenssageExceptions.ResourceMenssagesException", typeof(ResourceMenssagesException).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -1,5 +1,4 @@
-﻿using GerenciadorTarefas.Communication.Request;
-using GerenciadorTarefas.Model;
+﻿using GerenciadorTarefas.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;

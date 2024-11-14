@@ -1,7 +1,6 @@
 using GerenciadorTarefas.Repository.Interface;
 using GerenciadorTarefas.Repository;
 using GerenciadorTarefas.Service.Interface;
-using GerenciadorTarefas.Service;
 using GerenciadorTarefas.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System.Data;
 using FluentValidation;
 using GerenciadorTarefas.Service.Mapper;
+using GerenciadorTarefas.Service;
 
 namespace GerenciadorTarefas
 {
