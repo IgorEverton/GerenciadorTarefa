@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace GerenciadorTarefas.Data
+namespace GerenciadorTarefas.Domain.Data
 {
     public class DbContext
     {

@@ -1,8 +1,8 @@
 ﻿using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Communication.Response;
-using GerenciadorTarefas.Model;
+using GerenciadorTarefas.Domain.Model;
 
-namespace GerenciadorTarefas.Service.Mapper
+namespace GerenciadorTarefas.Application.Service.Mapper
 {
     public class MappingTo
     {

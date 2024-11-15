@@ -1,15 +1,15 @@
 ﻿using FluentValidation;
+using GerenciadorTarefas.Application.Service.Interface;
+using GerenciadorTarefas.Application.Service.Mapper;
 using GerenciadorTarefas.Communication.Request;
-using GerenciadorTarefas.Model;
-using GerenciadorTarefas.Repository.Interface;
-using GerenciadorTarefas.Service.Interface;
-using GerenciadorTarefas.Service.Mapper;
+using GerenciadorTarefas.Domain.Model;
+using GerenciadorTarefas.Domain.Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GerenciadorTarefas.Service
+namespace GerenciadorTarefas.Application.Service
 {
     public class TarefaService : ITarefaService
     {
@@ -24,18 +24,18 @@ namespace GerenciadorTarefas.Service
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<RequestTarefa>> GetAllAsync()
+        public async Task<(IEnumerable<RequestTarefa> Tarefas, int TotalPages)> GetAllAsync(int pageNumber, int pageSize)
         {
-            if (_repository == null)
-            {
-                throw new InvalidOperationException("Repositório não foi injetado corretamente.");
-            }
 
-            var tarefas = await _repository.GetAllAsync();
+            var totalCount = await _repository.GetTotalCountAsync();
+
+            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            var tarefas = await _repository.GetAllAsync(pageNumber, pageSize);
 
             var requestTarefas = tarefas.Select(_mapper.MapToRequestTarefa);
 
-            return requestTarefas;
+            return (requestTarefas, totalPages);
         }
 
         public Task<Tarefa> GetByIdAsync(Guid id)

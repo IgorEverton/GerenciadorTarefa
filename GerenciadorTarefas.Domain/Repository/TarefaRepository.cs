@@ -1,12 +1,12 @@
 ﻿using Dapper;
-using GerenciadorTarefas.Model;
-using GerenciadorTarefas.Repository.Interface;
+using GerenciadorTarefas.Domain.Model;
+using GerenciadorTarefas.Domain.Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace GerenciadorTarefas.Repository
+namespace GerenciadorTarefas.Domain.Repository
 {
     public class TarefaRepository : ITarefaRepository
     {
@@ -15,11 +15,26 @@ namespace GerenciadorTarefas.Repository
         {
             _connection = connection;
         }
-        public async Task<IEnumerable<Tarefa>> GetAllAsync()
+        public async Task<IEnumerable<Tarefa>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var sqlQuery = "SELECT * FROM Tarefas";
-            return await _connection.QueryAsync<Tarefa>(sqlQuery);
+
+            var offset = (pageNumber - 1) * pageSize;
+
+            var sqlQuery = @"
+                SELECT * FROM Tarefas
+                ORDER BY DataCriacao DESC
+                OFFSET @Offset ROWS
+                FETCH NEXT @PageSize ROWS ONLY";
+
+            return await _connection.QueryAsync<Tarefa>(sqlQuery, new { Offset = offset, PageSize = pageSize });
         }
+
+        public async Task<int> GetTotalCountAsync()
+        {
+            var  sqlQuery = "SELECT COUNT(1) FROM Tarefas";
+            return await _connection.ExecuteScalarAsync<int>(sqlQuery);
+        }
+
 
         public async Task<Tarefa> GetByIdAsync(Guid id)
         {
@@ -33,7 +48,7 @@ namespace GerenciadorTarefas.Repository
             string sqlQuery = "INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status) " +
                 "VALUES (@Id, @Titulo, @Descricao, @DataCriacao, @DataFinalizacao, @Status)";
 
-            var linhasAfetadas =  await _connection.ExecuteAsync(sqlQuery, tarefa);
+            var linhasAfetadas = await _connection.ExecuteAsync(sqlQuery, tarefa);
             return linhasAfetadas > 0 ? tarefa : null;
 
         }
@@ -41,14 +56,14 @@ namespace GerenciadorTarefas.Repository
         {
             string sqlString = "UPDATE Tarefas SET Titulo = @Titulo, Descricao = @Descricao, DataCriacao = @DataCriacao, DataFinalizacao = @DataFinalizacao, Status = @Status WHERE Id = @Id";
 
-            var linhasAlteradas = await _connection.ExecuteAsync(sqlString, new 
+            var linhasAlteradas = await _connection.ExecuteAsync(sqlString, new
             {
                 tarefa.Id,
                 tarefa.Titulo,
                 tarefa.Descricao,
                 tarefa.DataCriacao,
                 tarefa.DataFinalizacao,
-                tarefa.Status 
+                tarefa.Status
             });
 
             return linhasAlteradas > 0;
@@ -57,12 +72,12 @@ namespace GerenciadorTarefas.Repository
         public async Task<bool> DeleteAsync(Guid id)
         {
             string sqlQueryVerificar = "SELECT COUNT(1) FROM Tarefas WHERE Id = @id";
-            var tarefaEncontrada = await _connection.ExecuteScalarAsync<int>(sqlQueryVerificar, new {id});
+            var tarefaEncontrada = await _connection.ExecuteScalarAsync<int>(sqlQueryVerificar, new { id });
 
-            if(tarefaEncontrada < 0) return false;
+            if (tarefaEncontrada < 0) return false;
 
             string sqlQuery = "DELETE FROM Tarefas WHERE ID = @id";
-            var linhasAfetadas = await _connection.ExecuteAsync(sqlQuery, new {id});
+            var linhasAfetadas = await _connection.ExecuteAsync(sqlQuery, new { id });
 
             return linhasAfetadas > 0;
         }

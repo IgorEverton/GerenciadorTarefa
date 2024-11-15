@@ -1,13 +1,12 @@
 ﻿using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Communication.Response;
-using GerenciadorTarefas.Model;
-using GerenciadorTarefas.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using GerenciadorTarefas.Service.Mapper;
+using GerenciadorTarefas.Application.Service.Interface;
+using GerenciadorTarefas.Application.Service.Mapper;
 
 namespace GerenciadorTarefas.Controllers
 {
@@ -24,16 +23,25 @@ namespace GerenciadorTarefas.Controllers
         }
 
         [HttpGet("retorna-tarefas")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
         {
-            var tarefas = await _tarefaService.GetAllAsync();
 
-            if(tarefas == null)
+            var (tarefas, totalPages) = await _tarefaService.GetAllAsync(pageNumber, pageSize);
+
+            if (tarefas == null)
             {
                 return NoContent();
             }
 
-            return Ok(tarefas);
+            var response = new
+            {
+                TotalPages = totalPages,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Data = tarefas
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("retornar-tarefa/{id}")]

@@ -1,9 +1,9 @@
 ﻿using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Communication.Response;
-using GerenciadorTarefas.MenssageExceptions.ExceptionBase;
+using GerenciadorTarefas.Exceptions.MenssageExceptions.ExceptionBase;
 using System.Linq;
 
-namespace GerenciadorTarefas.Validation
+namespace GerenciadorTarefas.Application.Validation
 {
     public class RegisterTarefaUseCase
     {
@@ -25,11 +25,11 @@ namespace GerenciadorTarefas.Validation
 
             var result = validator.Validate(request);
 
-            if(result.IsValid == false)
+            if (result.IsValid == false)
             {
                 var erroMensagens = result.Errors.Select(erro => erro.ErrorMessage).ToList();
                 throw new ErrorOnValidationExceptions(erroMensagens);
-             }
+            }
         }
 
     }

@@ -1,6 +1,6 @@
-﻿namespace GerenciadorTarefas.MenssageExceptions.ExceptionBase
+﻿namespace GerenciadorTarefas.Exceptions.MenssageExceptions.ExceptionBase
 {
-    public class GerenciadorTarefasExceptions: System.Exception
+    public class GerenciadorTarefasExceptions : System.Exception
     {
     }
 }

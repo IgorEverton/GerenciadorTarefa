@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GerenciadorTarefas.Model
+namespace GerenciadorTarefas.Domain.Model
 {
     public class Tarefa
     {

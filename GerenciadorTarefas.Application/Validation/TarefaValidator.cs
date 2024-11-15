@@ -2,11 +2,11 @@
 using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Exceptions.MenssageExceptions;
 
-namespace GerenciadorTarefas.Validation
+namespace GerenciadorTarefas.Application.Validation
 {
-    public class TarefaValidator: AbstractValidator<RequestTarefa>
+    public class TarefaValidator : AbstractValidator<RequestTarefa>
     {
-        public TarefaValidator() 
+        public TarefaValidator()
         {
             RuleFor(task => task.Titulo).NotEmpty().WithMessage(ResourceMenssagesException.TITLE_EMPTY);
             RuleFor(task => task.Descricao).MaximumLength(500).WithMessage(ResourceMenssagesException.DESCRIPTION_MAX_CARAC);
