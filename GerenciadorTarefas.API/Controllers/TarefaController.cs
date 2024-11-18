@@ -26,20 +26,14 @@ namespace GerenciadorTarefas.Controllers
         public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
         {
 
-            var (tarefas, totalPages) = await _tarefaService.GetAllAsync(pageNumber, pageSize);
+            var (tarefas, totalCount) = await _tarefaService.GetAllAsync(pageNumber, pageSize);
 
             if (tarefas == null)
             {
                 return NoContent();
             }
 
-            var response = new
-            {
-                TotalPages = totalPages,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Data = tarefas
-            };
+            var response = new PagedResponse<RequestTarefa>(tarefas, pageNumber, pageSize, totalCount);
 
             return Ok(response);
         }
