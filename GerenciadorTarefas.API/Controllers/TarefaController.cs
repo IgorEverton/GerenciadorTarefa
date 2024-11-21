@@ -6,7 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using GerenciadorTarefas.Application.Service.Interface;
-using GerenciadorTarefas.Application.Service.Mapper;
+using GerenciadorTarefas.Application.Mapper;
 
 namespace GerenciadorTarefas.Controllers
 {
@@ -62,7 +62,6 @@ namespace GerenciadorTarefas.Controllers
                 request.Id = Guid.NewGuid();
                 var result = await _tarefaService.CreateAsync(request);
 
-                // Teste de serialização manual
                 var serializedData = System.Text.Json.JsonSerializer.Serialize(result);
 
                 var response = _mapper.MapToResponseTarefa(result);

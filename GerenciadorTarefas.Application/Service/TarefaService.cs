@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
+using GerenciadorTarefas.Application.Mapper;
 using GerenciadorTarefas.Application.Service.Interface;
-using GerenciadorTarefas.Application.Service.Mapper;
 using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Domain.Model;
 using GerenciadorTarefas.Domain.Repository.Interface;

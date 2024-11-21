@@ -13,7 +13,11 @@ using GerenciadorTarefas.Domain.Repository;
 using GerenciadorTarefas.Application.Service;
 using GerenciadorTarefas.Application.Service.Interface;
 using GerenciadorTarefas.Application.Validation;
-using GerenciadorTarefas.Application.Service.Mapper;
+using GerenciadorTarefas.Application.Mapper;
+using GerenciadorTarefas.Application.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 namespace GerenciadorTarefas
@@ -34,7 +38,25 @@ namespace GerenciadorTarefas
             services.AddScoped<ITarefaService, TarefaService>();
             services.AddValidatorsFromAssemblyContaining<TarefaValidator>();
             services.AddSingleton<MappingTo>();
-
+            services.AddSingleton<JwtTokenGenerator, JwtTokenGenerator>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).
+            AddJwtBearer(options => 
+            {
+                options.TokenValidationParameters = new TokenValidationParameters 
+                { 
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

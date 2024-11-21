@@ -2,7 +2,7 @@
 using GerenciadorTarefas.Communication.Response;
 using GerenciadorTarefas.Domain.Model;
 
-namespace GerenciadorTarefas.Application.Service.Mapper
+namespace GerenciadorTarefas.Application.Mapper
 {
     public class MappingTo
     {
