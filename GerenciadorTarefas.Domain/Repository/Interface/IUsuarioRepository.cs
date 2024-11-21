@@ -12,7 +12,7 @@ namespace GerenciadorTarefas.Domain.Repository.Interface
         Task<int> CreateAsync(Usuario usuario);
         Task<bool> UpdateAsync(Usuario usuario);
         Task<bool> DeleteAsync(Guid id);
-        Task<Usuario> GetByEmailAsync(string email); // Para autenticação
+        Task<Usuario> GetByEmailAsync(string email);
     }
 
 }

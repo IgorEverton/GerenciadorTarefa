@@ -10,10 +10,11 @@ namespace GerenciadorTarefas.Application.Service.Interface
     {
         Task<Usuario> GetByIdAsync(Guid id);
         Task<IEnumerable<Usuario>> GetAllAsync();
-        Task<Usuario> CreateAsync(RequestUsuario request);
-        Task<bool> UpdateAsync(RequestUsuario request);
-        Task<bool> DeleteAsync(Guid id);
-        Task<string> AuthenticateAsync(string email, string senha); // Geração de token
+        Task<Usuario> CreateUserAsync(RequestUsuario request);
+        Task<bool> UpdateUserAsync(RequestUsuario request);
+        Task<bool> DeleteUserAsync(Guid id);
+        Task<string> AuthenticateAsync(string email, string senha);
+        Task<bool> GetByEmailAsync(string email);
     }
 
 }

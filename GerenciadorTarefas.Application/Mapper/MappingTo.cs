@@ -43,5 +43,40 @@ namespace GerenciadorTarefas.Application.Mapper
             };
         }
 
+        public RequestUsuario MapToRequestUsuario(Usuario usuario)
+        {
+            return new RequestUsuario
+            {
+                Id = usuario.Id,
+                Name = usuario.Name,
+                Email = usuario.Email,
+                Password = usuario.Password,
+                DataCriacao = usuario.DataCriacao,
+                IsActive = usuario.IsActive
+            };
+        }
+
+        public Usuario MapToUsuario(RequestUsuario usuario)
+        {
+            return new Usuario
+            {
+                Id = usuario.Id,
+                Name = usuario.Name,
+                Email = usuario.Email,
+                Password = usuario.Password,
+                DataCriacao = usuario.DataCriacao,
+                IsActive = usuario.IsActive
+            };
+        }
+
+        public ResponseUsuario MapToResponseUsuario(Usuario usuario)
+        {
+            return new ResponseUsuario
+            {
+                Name = usuario.Name,
+                Email = usuario.Email,
+                DataCriacao = usuario.DataCriacao,
+            };
+        }
     }
 }

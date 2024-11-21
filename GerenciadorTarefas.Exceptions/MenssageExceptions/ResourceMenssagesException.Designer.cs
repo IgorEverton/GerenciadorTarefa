@@ -79,6 +79,15 @@ namespace GerenciadorTarefas.Exceptions.MenssageExceptions {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Password must be 6 or more characters long.
+        /// </summary>
+        public static string PASSWORD_MIN_CARAC {
+            get {
+                return ResourceManager.GetString("PASSWORD_MIN_CARAC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a title cannot be empty.
         /// </summary>
         public static string TITLE_EMPTY {
@@ -93,6 +102,42 @@ namespace GerenciadorTarefas.Exceptions.MenssageExceptions {
         public static string UNKNOW_ERROR {
             get {
                 return ResourceManager.GetString("UNKNOW_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Email cannot be empty.
+        /// </summary>
+        public static string USER_EMAIL_EMPTY {
+            get {
+                return ResourceManager.GetString("USER_EMAIL_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Enter a valid email.
+        /// </summary>
+        public static string USER_EMAIL_INVALID {
+            get {
+                return ResourceManager.GetString("USER_EMAIL_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a name cannot be empty.
+        /// </summary>
+        public static string USER_NAME_EMPTY {
+            get {
+                return ResourceManager.GetString("USER_NAME_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Password cannot be empty.
+        /// </summary>
+        public static string USER_PASSWORD_EMPTY {
+            get {
+                return ResourceManager.GetString("USER_PASSWORD_EMPTY", resourceCulture);
             }
         }
     }

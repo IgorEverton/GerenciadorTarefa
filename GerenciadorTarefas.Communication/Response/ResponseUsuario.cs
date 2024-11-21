@@ -8,7 +8,7 @@ namespace GerenciadorTarefas.Communication.Response
 {
     public class ResponseUsuario
     {
-        public string Nome { get; set; }
+        public string Name { get; set; }
         public string Email { get; set; }
         public DateTime DataCriacao { get; set; }
     }
