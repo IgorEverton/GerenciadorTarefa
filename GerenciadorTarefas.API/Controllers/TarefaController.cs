@@ -86,7 +86,7 @@ namespace GerenciadorTarefas.Controllers
                 {
                     return Ok();
                 }
-                return NotFound("Tafera não encontrada");
+                return NotFound("Tarefa não encontrada");
             }
             catch (Exception ex) 
             {

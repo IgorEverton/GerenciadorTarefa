@@ -21,10 +21,11 @@ namespace GerenciadorTarefas.Application.Service
         private readonly IValidator<RequestUsuario> _validatorUser;
         private readonly MappingTo _mapper;
 
-        public UsuarioService(IUsuarioRepository repository, IJwtTokenGenerator tokenGenerator, MappingTo mapper)
+        public UsuarioService(IUsuarioRepository repository, IJwtTokenGenerator tokenGenerator, MappingTo mapper, IValidator<RequestUsuario> validatorUser)
         {
             _repository = repository;
             _tokenGenerator = tokenGenerator;
+            _validatorUser = validatorUser;
             _mapper = mapper; 
         }
 

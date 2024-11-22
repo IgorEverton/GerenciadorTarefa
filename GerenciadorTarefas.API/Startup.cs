@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using GerenciadorTarefas.Communication.Request;
+using GerenciadorTarefas.Application.Authentication.Inteface;
 
 
 namespace GerenciadorTarefas
@@ -37,10 +38,12 @@ namespace GerenciadorTarefas
             services.AddTransient<IDbConnection>(db => new SqlConnection(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ITarefaRepository, TarefaRepository>();
             services.AddScoped<ITarefaService, TarefaService>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddValidatorsFromAssemblyContaining<TarefaValidator>();
             services.AddTransient<IValidator<RequestUsuario>, UsuarioValidator>();
             services.AddSingleton<MappingTo>();
-            services.AddSingleton<JwtTokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

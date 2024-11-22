@@ -26,7 +26,7 @@ namespace GerenciadorTarefas.Application.Authentication
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(name));
+            var key = new SymmetricSecurityKey(Guid.NewGuid().ToByteArray());
             var creds =  new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
