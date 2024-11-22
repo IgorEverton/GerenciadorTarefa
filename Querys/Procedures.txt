@@ -1,0 +1,48 @@
+--PROCEDURE PARA ADICIONAR TAREFA
+CREATE PROCEDURE AddTarefa
+	@Id UNIQUEIDENTIFIER,
+	@Titulo NVARCHAR(48),
+	@Descricao NVARCHAR(255),
+	@DataCriacao DATE,
+	@DataFinalizacao DATE,
+	@Status BIT
+AS
+BEGIN
+	INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status)
+	VALUES (@iD, @Titulo, @Descricao, GETDATE(), @DataFinalizacao, @Status);
+END
+
+--RODAR A PROCEDURE
+DECLARE @Id UNIQUEIDENTIFIER = NEWID();
+EXEC AddTarefa @Id, 'Nova Tarefa', 'Descrição da tarefa', GETDATE(), '2024-12-31T00:00:00', 1;
+
+
+
+
+
+--PROCEDURE PARA ADICIONAR USUÁRIOS
+CREATE PROCEDURE AddUsuario
+	@Id UNIQUEIDENTIFIER,
+	@Name NVARCHAR(100),
+	@Email NVARCHAR(100),
+	@Password NVARCHAR(100),
+	@DataCriacao DATETIME,
+	@IsActive BIT
+AS
+BEGIN
+    INSERT INTO Usuarios (Id, Name, Email, Password, DataCriacao, IsActive)
+    VALUES (@Id, @Name, @Email, @Password, @DataCriacao, @IsActive);
+END;
+
+--RODAR PROCEDURE
+DECLARE @Id UNIQUEIDENTIFIER = NEWID(0;
+EXEC AddUsuario @Id, 'Teste', 'teste@gmail.com', '123456', '2024-12-22T01:00:00', 1
+
+
+--PROCEDURE PARA RETORNAR TODAS AS TAREFAS ASSOCIADA AO USUÁRIO
+CREATE PROCEDURE ObterTarefasPorUsuario
+@UsuarioId UNIQUEIDENTIFIER
+AS
+BEGIN
+    SELECT * FROM Tarefas WHERE UsuarioId = @UsuarioId;
+END;

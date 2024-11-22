@@ -1,3 +1,5 @@
+TAREFAS
+
 --TAREFAS QUE FORAM FINALIZADAS EM 2024 E ESTÃO COM STATUS FALSE
 SELECT Titulo FROM Tarefas WHERE YEAR(DataFinalizacao) = 2024 AND Status = 0 ORDER BY DataFinalizacao DESC;
 
@@ -20,20 +22,13 @@ SELECT * FROM Tarefas WHERE DataFinalizacao BETWEEN '2024-11-01T07:00:00' AND '2
 SELECT * FROM Tarefas WHERE Titulo LIKE '%Tarefa%';
 
 
---PROCEDURE
-CREATE PROCEDURE AddTarefa
-	@Id UNIQUEIDENTIFIER,
-	@Titulo NVARCHAR(48),
-	@Descricao NVARCHAR(255),
-	@DataCriacao DATE,
-	@DataFinalizacao DATE,
-	@Status BIT
-AS
-BEGIN
-	INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status)
-	VALUES (@iD, @Titulo, @Descricao, GETDATE(), @DataFinalizacao, @Status);
-END
+USUÁRIO
 
---RODAR A PROCEDURE
-DECLARE @Id UNIQUEIDENTIFIER = NEWID();
-EXEC AddTarefa @Id, 'Nova Tarefa', 'Descrição da tarefa', GETDATE(), '2024-12-31T00:00:00', 1;
+--USUÁRIOS ATIVOS
+SELECT * FROM Usuarios WHERE IsActive = 1;
+
+--ULTIMOS USUÁRIOS CADASTRADOS
+SELECT * FROM Usuarios ORDER BY DataCriacao DESC;
+
+--NÚMERO TOTAL DE CADASTRO
+SELECT COUNT(*) AS TotalUsuarios FROM Usuarios;
