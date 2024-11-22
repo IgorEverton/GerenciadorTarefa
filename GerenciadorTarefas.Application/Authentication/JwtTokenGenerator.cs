@@ -1,4 +1,5 @@
 ﻿using GerenciadorTarefas.Application.Authentication.Inteface;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -26,7 +27,7 @@ namespace GerenciadorTarefas.Application.Authentication
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var key = new SymmetricSecurityKey(Guid.NewGuid().ToByteArray());
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("minha-chave-secreta-de-no-minimo-32-caracteres"));
             var creds =  new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

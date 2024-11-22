@@ -10,12 +10,9 @@ namespace GerenciadorTarefas.Application.Mapper
         {
             return new RequestTarefa
             {
-                Id = tarefa.Id,
                 Titulo = tarefa.Titulo,
                 Descricao = tarefa.Descricao,
-                DataCriacao = tarefa.DataCriacao,
                 DataFinalizacao = tarefa.DataFinalizacao,
-                Status = tarefa.Status
             };
         }
 
@@ -47,12 +44,9 @@ namespace GerenciadorTarefas.Application.Mapper
         {
             return new RequestUsuario
             {
-                Id = usuario.Id,
                 Name = usuario.Name,
                 Email = usuario.Email,
                 Password = usuario.Password,
-                DataCriacao = usuario.DataCriacao,
-                IsActive = usuario.IsActive
             };
         }
 
@@ -60,12 +54,9 @@ namespace GerenciadorTarefas.Application.Mapper
         {
             return new Usuario
             {
-                Id = usuario.Id,
                 Name = usuario.Name,
                 Email = usuario.Email,
                 Password = usuario.Password,
-                DataCriacao = usuario.DataCriacao,
-                IsActive = usuario.IsActive
             };
         }
 
@@ -75,8 +66,9 @@ namespace GerenciadorTarefas.Application.Mapper
             {
                 Name = usuario.Name,
                 Email = usuario.Email,
-                DataCriacao = usuario.DataCriacao,
             };
         }
+
+
     }
 }

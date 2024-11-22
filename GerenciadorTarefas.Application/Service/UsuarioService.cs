@@ -34,10 +34,6 @@ namespace GerenciadorTarefas.Application.Service
             return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Usuario>> GetAllAsync()
-        {
-            return await _repository.GetAllAsync();
-        }
 
         public async Task<Usuario> CreateUserAsync(RequestUsuario request)
         {
@@ -61,18 +57,22 @@ namespace GerenciadorTarefas.Application.Service
 
         public async Task<bool> UpdateUserAsync(RequestUsuario request)
         {
-            var resultValidator = await _validatorUser.ValidateAsync(request);
-
-            if (!resultValidator.IsValid)
-            {
-                throw new ValidationException(resultValidator.Errors);
-            }
-
             var usuario = await _repository.GetByIdAsync(request.Id);
 
-            if (usuario == null) return false;
+            if (usuario == null)
+                return false; // Usuário não encontrado
 
-            return await _repository.UpdateAsync(usuario);
+            // Atualiza as propriedades que foram enviadas na requisição.
+            if (!string.IsNullOrEmpty(request.Name)) usuario.Name = request.Name;
+            if (!string.IsNullOrEmpty(request.Email)) usuario.Email = request.Email;
+            if (!string.IsNullOrEmpty(request.Password)) usuario.Password = request.Password;
+            if (request.DataCriacao.HasValue) usuario.DataCriacao = request.DataCriacao.Value;
+            if (request.IsActive.HasValue) usuario.IsActive = request.IsActive.Value;
+
+            // Atualiza no banco de dados.
+            await _repository.UpdateAsync(usuario);
+
+            return true;
         }
 
         public async Task<bool> DeleteUserAsync(Guid id)

@@ -24,7 +24,7 @@ namespace GerenciadorTarefas.API.Controllers
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("retornar-usuario/{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
             var usuario = await _usuarioService.GetByIdAsync(id);
@@ -33,7 +33,7 @@ namespace GerenciadorTarefas.API.Controllers
         }
 
 
-        [HttpPost("register-user")]
+        [HttpPost("registrar-usuario")]
         [ProducesResponseType(typeof(ResponseUsuario), StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateUser([FromBody] RequestUsuario request)
         {
@@ -41,20 +41,25 @@ namespace GerenciadorTarefas.API.Controllers
 
             try
             {
-                request.Id = Guid.NewGuid();
                 var usuarioEncontrado = await _usuarioService.GetByEmailAsync(request.Email);
 
-                if (usuarioEncontrado != false) return Conflict("Email já cadastrado");
+                if (usuarioEncontrado) return Conflict("Email já cadastrado");
 
 
                 var novoUsuario = await _usuarioService.CreateUserAsync(request);
+
+                var linkAtualizacao = Url.Action(nameof(Update), "Usuario", new { id = novoUsuario.Id }, Request.Scheme);
 
                 var token = _jwtTokenGenerator.GenerateToken(novoUsuario.Id, novoUsuario.Email, novoUsuario.Name);
 
                 return CreatedAtAction(nameof(GetUserById), new { id = novoUsuario.Id }, new
                 {
                     usuario = novoUsuario,
-                    token
+                    token,
+                    links = new
+                    {
+                        atualizar = linkAtualizacao
+                    }
                 });
             }
             catch(Exception ex) 
@@ -68,28 +73,37 @@ namespace GerenciadorTarefas.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            if (request == null) return BadRequest("Dados inválidos");
-
-            var usuarioEncontrado = await _usuarioService.AuthenticateAsync(request.Email, request.Password);
-            if(usuarioEncontrado != null)
+            if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
             {
-                return Unauthorized("Email ou senha incorreto");
+                return BadRequest("Dados inválidos.");
+            }
+            try
+            {
+                var token = await _usuarioService.AuthenticateAsync(request.Email, request.Password);
+
+                return Ok(new { Token = token });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Email ou senha incorretos.");
+            }
+            catch (Exception ex) 
+            {
+                  return StatusCode(500, ex.Message);          
             }
 
-            var token = await _usuarioService.AuthenticateAsync(request.Email, request.Password);
 
-            return Ok(new { Token = token });
         }
 
-        [HttpPut]
+        [HttpPatch("atualizar-usuario/{id}")]
         public async Task<IActionResult> Update([FromBody] RequestUsuario request)
         {
             if (request == null) return BadRequest("Usuário não pode ser nulo");
 
             try
             {
-                var updated = await _usuarioService.UpdateUserAsync(request);
-                if (!updated) return NotFound("Usuário não encontrado");
+                var usuarioAtualizado = await _usuarioService.UpdateUserAsync(request);
+                if (!usuarioAtualizado) return NotFound("Usuário não encontrado");
                 return Ok();
             }
             catch(Exception ex)

@@ -33,6 +33,9 @@ namespace GerenciadorTarefas.Domain.Repository
 
         public async Task<int> CreateAsync(Usuario usuario)
         {
+            usuario.Id = Guid.NewGuid();
+            usuario.DataCriacao = DateTime.UtcNow;
+            usuario.IsActive = true;
             var query = @"
             INSERT INTO Usuarios (Id, Name, Email, Password, DataCriacao, IsActive)
             VALUES (@Id, @Name, @Email, @Password, @DataCriacao, @IsActive)";
@@ -43,7 +46,7 @@ namespace GerenciadorTarefas.Domain.Repository
         {
             var query = @"
             UPDATE Usuarios 
-            SET Nome = @Name, Email = @Email, Password = @Password
+            SET Name = @Name, Email = @Email, Password = @Password
             WHERE Id = @Id";
             return await _connection.ExecuteAsync(query, usuario) > 0;
         }

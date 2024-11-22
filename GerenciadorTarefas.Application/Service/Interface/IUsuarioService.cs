@@ -9,7 +9,6 @@ namespace GerenciadorTarefas.Application.Service.Interface
     public interface IUsuarioService
     {
         Task<Usuario> GetByIdAsync(Guid id);
-        Task<IEnumerable<Usuario>> GetAllAsync();
         Task<Usuario> CreateUserAsync(RequestUsuario request);
         Task<bool> UpdateUserAsync(RequestUsuario request);
         Task<bool> DeleteUserAsync(Guid id);
