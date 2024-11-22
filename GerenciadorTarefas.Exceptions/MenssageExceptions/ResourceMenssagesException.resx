@@ -123,10 +123,25 @@
   <data name="DESCRIPTION_MAX_CARAC" xml:space="preserve">
     <value>Description cannot exceed 500 characters</value>
   </data>
+  <data name="PASSWORD_MIN_CARAC" xml:space="preserve">
+    <value>Password must be 6 or more characters long</value>
+  </data>
   <data name="TITLE_EMPTY" xml:space="preserve">
     <value>title cannot be empty</value>
   </data>
   <data name="UNKNOW_ERROR" xml:space="preserve">
     <value>unknown error</value>
+  </data>
+  <data name="USER_EMAIL_EMPTY" xml:space="preserve">
+    <value>Email cannot be empty</value>
+  </data>
+  <data name="USER_EMAIL_INVALID" xml:space="preserve">
+    <value>Enter a valid email</value>
+  </data>
+  <data name="USER_NAME_EMPTY" xml:space="preserve">
+    <value>name cannot be empty</value>
+  </data>
+  <data name="USER_PASSWORD_EMPTY" xml:space="preserve">
+    <value>Password cannot be empty</value>
   </data>
 </root>

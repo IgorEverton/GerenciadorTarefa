@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
+using GerenciadorTarefas.Application.Mapper;
 using GerenciadorTarefas.Application.Service.Interface;
-using GerenciadorTarefas.Application.Service.Mapper;
 using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Domain.Model;
 using GerenciadorTarefas.Domain.Repository.Interface;
@@ -24,18 +24,16 @@ namespace GerenciadorTarefas.Application.Service
             _mapper = mapper;
         }
 
-        public async Task<(IEnumerable<RequestTarefa> Tarefas, int TotalPages)> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<RequestTarefa> Tarefas, int TotalCount)> GetAllAsync(int pageNumber, int pageSize)
         {
 
-            var totalCount = await _repository.GetTotalCountAsync();
-
-            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            var TotalCount = await _repository.GetTotalCountAsync();
 
             var tarefas = await _repository.GetAllAsync(pageNumber, pageSize);
 
             var requestTarefas = tarefas.Select(_mapper.MapToRequestTarefa);
 
-            return (requestTarefas, totalPages);
+            return (requestTarefas, TotalCount);
         }
 
         public Task<Tarefa> GetByIdAsync(Guid id)
@@ -45,8 +43,6 @@ namespace GerenciadorTarefas.Application.Service
 
         public async Task<Tarefa> CreateAsync(RequestTarefa request)
         {
-
-            //var tarefa = MapToTarefa(request);
             var resultValidator = await _validator.ValidateAsync(request);
 
             if (!resultValidator.IsValid)

@@ -2,7 +2,7 @@
 using GerenciadorTarefas.Communication.Response;
 using GerenciadorTarefas.Domain.Model;
 
-namespace GerenciadorTarefas.Application.Service.Mapper
+namespace GerenciadorTarefas.Application.Mapper
 {
     public class MappingTo
     {
@@ -10,12 +10,9 @@ namespace GerenciadorTarefas.Application.Service.Mapper
         {
             return new RequestTarefa
             {
-                Id = tarefa.Id,
                 Titulo = tarefa.Titulo,
                 Descricao = tarefa.Descricao,
-                DataCriacao = tarefa.DataCriacao,
                 DataFinalizacao = tarefa.DataFinalizacao,
-                Status = tarefa.Status
             };
         }
 
@@ -42,6 +39,36 @@ namespace GerenciadorTarefas.Application.Service.Mapper
                 Status = tarefa.Status
             };
         }
+
+        public RequestUsuario MapToRequestUsuario(Usuario usuario)
+        {
+            return new RequestUsuario
+            {
+                Name = usuario.Name,
+                Email = usuario.Email,
+                Password = usuario.Password,
+            };
+        }
+
+        public Usuario MapToUsuario(RequestUsuario usuario)
+        {
+            return new Usuario
+            {
+                Name = usuario.Name,
+                Email = usuario.Email,
+                Password = usuario.Password,
+            };
+        }
+
+        public ResponseUsuario MapToResponseUsuario(Usuario usuario)
+        {
+            return new ResponseUsuario
+            {
+                Name = usuario.Name,
+                Email = usuario.Email,
+            };
+        }
+
 
     }
 }

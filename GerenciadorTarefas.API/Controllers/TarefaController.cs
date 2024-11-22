@@ -6,7 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using GerenciadorTarefas.Application.Service.Interface;
-using GerenciadorTarefas.Application.Service.Mapper;
+using GerenciadorTarefas.Application.Mapper;
 
 namespace GerenciadorTarefas.Controllers
 {
@@ -26,20 +26,14 @@ namespace GerenciadorTarefas.Controllers
         public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
         {
 
-            var (tarefas, totalPages) = await _tarefaService.GetAllAsync(pageNumber, pageSize);
+            var (tarefas, totalCount) = await _tarefaService.GetAllAsync(pageNumber, pageSize);
 
             if (tarefas == null)
             {
                 return NoContent();
             }
 
-            var response = new
-            {
-                TotalPages = totalPages,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Data = tarefas
-            };
+            var response = new PagedResponse<RequestTarefa>(tarefas, pageNumber, pageSize, totalCount);
 
             return Ok(response);
         }
@@ -68,7 +62,6 @@ namespace GerenciadorTarefas.Controllers
                 request.Id = Guid.NewGuid();
                 var result = await _tarefaService.CreateAsync(request);
 
-                // Teste de serialização manual
                 var serializedData = System.Text.Json.JsonSerializer.Serialize(result);
 
                 var response = _mapper.MapToResponseTarefa(result);
@@ -93,7 +86,7 @@ namespace GerenciadorTarefas.Controllers
                 {
                     return Ok();
                 }
-                return NotFound("Tafera não encontrada");
+                return NotFound("Tarefa não encontrada");
             }
             catch (Exception ex) 
             {
