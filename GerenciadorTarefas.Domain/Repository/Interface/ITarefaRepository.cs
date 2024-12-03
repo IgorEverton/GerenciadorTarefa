@@ -8,11 +8,11 @@ namespace GerenciadorTarefas.Domain.Repository.Interface
 {
     public interface ITarefaRepository
     {
-        Task<IEnumerable<Tarefa>> GetAllAsync(int pageNumber, int pageSize);
+        Task<IEnumerable<Tarefa>> GetAllAsync(Guid userId, int pageNumber, int pageSize);
         Task<Tarefa> GetByIdAsync(Guid id);
         Task<Tarefa> CreateAsync(Tarefa tarefa);
         Task<bool> UpdateAsync(Tarefa tarefa);
         Task<bool> DeleteAsync(Guid id);
-        Task<int> GetTotalCountAsync();
+        Task<int> GetTotalCountAsync(Guid userId);
     }
 }

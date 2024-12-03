@@ -10,5 +10,6 @@ namespace GerenciadorTarefas.Domain.Model
         public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
         public DateTime DataFinalizacao { get; set; }
         public bool Status { get; set; } = true;
+        public Guid UsuarioId { get; set; }
     }
 }

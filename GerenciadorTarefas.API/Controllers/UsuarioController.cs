@@ -24,7 +24,9 @@ namespace GerenciadorTarefas.API.Controllers
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
-        [HttpGet("retornar-usuario/{id}")]
+        [HttpGet("usuario/{id}")]
+        [ProducesResponseType(typeof(ResponseUsuario), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserById(Guid id)
         {
             var usuario = await _usuarioService.GetByIdAsync(id);
@@ -33,7 +35,7 @@ namespace GerenciadorTarefas.API.Controllers
         }
 
 
-        [HttpPost("registrar-usuario")]
+        [HttpPost("usuario/registrar")]
         [ProducesResponseType(typeof(ResponseUsuario), StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateUser([FromBody] RequestUsuario request)
         {
@@ -64,7 +66,7 @@ namespace GerenciadorTarefas.API.Controllers
             }
             catch(Exception ex) 
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
             }
 
         }
@@ -95,7 +97,7 @@ namespace GerenciadorTarefas.API.Controllers
 
         }
 
-        [HttpPatch("atualizar-usuario/{id}")]
+        [HttpPatch("usuario/atualizar/{id}")]
         public async Task<IActionResult> Update([FromBody] RequestUsuario request)
         {
             if (request == null) return BadRequest("Usuário não pode ser nulo");
@@ -108,12 +110,12 @@ namespace GerenciadorTarefas.API.Controllers
             }
             catch(Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
             }
 
         }
 
-        [HttpDelete("delete-usuario/{id}")]
+        [HttpDelete("usuario/deletar/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -129,7 +131,7 @@ namespace GerenciadorTarefas.API.Controllers
             }
             catch(Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
             }
 
         }

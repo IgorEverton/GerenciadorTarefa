@@ -1,7 +1,9 @@
-﻿using FluentValidation;
+﻿using Azure.Core;
+using FluentValidation;
 using GerenciadorTarefas.Application.Mapper;
 using GerenciadorTarefas.Application.Service.Interface;
 using GerenciadorTarefas.Communication.Request;
+using GerenciadorTarefas.Communication.Response;
 using GerenciadorTarefas.Domain.Model;
 using GerenciadorTarefas.Domain.Repository.Interface;
 using System;
@@ -24,19 +26,18 @@ namespace GerenciadorTarefas.Application.Service
             _mapper = mapper;
         }
 
-        public async Task<(IEnumerable<RequestTarefa> Tarefas, int TotalCount)> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<ResponseTarefa> Tarefas, int TotalCount)> GetAllAsync(Guid usuarioId, int pageNumber, int pageSize)
         {
 
-            var TotalCount = await _repository.GetTotalCountAsync();
+            var tarefas = await _repository.GetAllAsync(usuarioId, pageNumber, pageSize);
+            var TotalCount = await _repository.GetTotalCountAsync(usuarioId);
 
-            var tarefas = await _repository.GetAllAsync(pageNumber, pageSize);
+            var responseTarefas = tarefas.Select(tarefa => _mapper.MapToResponseTarefa(tarefa));
 
-            var requestTarefas = tarefas.Select(_mapper.MapToRequestTarefa);
-
-            return (requestTarefas, TotalCount);
+            return (responseTarefas, TotalCount);
         }
 
-        public Task<Tarefa> GetByIdAsync(Guid id)
+        public Task<Tarefa> GetByIdAsync(Guid id, Guid usuarioI)
         {
             return _repository.GetByIdAsync(id);
         }
@@ -54,22 +55,35 @@ namespace GerenciadorTarefas.Application.Service
             return await _repository.CreateAsync(tarefa);
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
-        {
-            return await _repository.DeleteAsync(id);
-        }
 
-        public async Task<bool> UpdateAsync(RequestTarefa request)
+        public async Task<bool> UpdateAsync(Guid usuarioId, RequestTarefa request)
         {
+
             var resultValidator = await _validator.ValidateAsync(request);
             if (!resultValidator.IsValid)
             {
                 throw new ValidationException(resultValidator.Errors);
             }
-            var tarefa = _mapper.MapToTarefa(request);
-            return await _repository.UpdateAsync(tarefa);
+
+            var tarefa = await _repository.GetByIdAsync(request.Id);
+
+            if (tarefa == null || tarefa.UsuarioId != usuarioId)
+                return false;
+
+            return await _repository.UpdateAsync(_mapper.MapToTarefa(request));
+        }
+
+        public async Task<bool> DeleteAsync(Guid id, Guid usuarioId)
+        {
+            var tarefa = await _repository.GetByIdAsync(id);
+
+            if (tarefa == null || tarefa.UsuarioId != usuarioId)
+                return false;
+
+            return await _repository.DeleteAsync(id);
         }
     }
+
 
 
 }

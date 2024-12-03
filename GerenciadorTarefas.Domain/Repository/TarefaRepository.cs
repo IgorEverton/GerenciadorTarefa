@@ -15,32 +15,37 @@ namespace GerenciadorTarefas.Domain.Repository
         {
             _connection = connection;
         }
-        public async Task<IEnumerable<Tarefa>> GetAllAsync(int pageNumber, int pageSize)
+
+
+        public async Task<IEnumerable<Tarefa>> GetAllAsync(Guid usuarioId, int pageNumber, int pageSize)
         {
 
             var offset = (pageNumber - 1) * pageSize;
 
             var sqlQuery = @"
                 SELECT * FROM Tarefas
+                WHERE UsuarioId = @usuarioId
                 ORDER BY DataCriacao DESC
                 OFFSET @Offset ROWS
                 FETCH NEXT @PageSize ROWS ONLY";
 
-            return await _connection.QueryAsync<Tarefa>(sqlQuery, new { Offset = offset, PageSize = pageSize });
+            return await _connection.QueryAsync<Tarefa>(sqlQuery, new { UsuarioId = usuarioId, Offset = offset, PageSize = pageSize });
         }
 
-        public async Task<int> GetTotalCountAsync()
+
+        public async Task<int> GetTotalCountAsync(Guid usuarioId)
         {
-            var  sqlQuery = "SELECT COUNT(1) FROM Tarefas";
-            return await _connection.ExecuteScalarAsync<int>(sqlQuery);
+            var  sqlQuery = "SELECT COUNT(*) FROM Tarefas WHERE UsuarioId = @usuarioId";
+            return await _connection.ExecuteScalarAsync<int>(sqlQuery, new { UsuarioId = usuarioId });
         }
 
 
-        public async Task<Tarefa> GetByIdAsync(Guid id)
+        public async Task<Tarefa> GetByIdAsync(Guid usuarioId)
         {
-            string sqlQuery = "SELECT Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status FROM Tarefas WHERE Id = @Id";
-            return await _connection.QuerySingleOrDefaultAsync<Tarefa>(sqlQuery, new { Id = id });
+            string sqlQuery = "SELECT * FROM Tarefas WHERE Id = @Id";
+            return await _connection.QuerySingleOrDefaultAsync<Tarefa>(sqlQuery, new { UsuarioId = usuarioId });
         }
+
 
         public async Task<Tarefa> CreateAsync(Tarefa tarefa)
         {
@@ -52,6 +57,8 @@ namespace GerenciadorTarefas.Domain.Repository
             return linhasAfetadas > 0 ? tarefa : null;
 
         }
+
+
         public async Task<bool> UpdateAsync(Tarefa tarefa)
         {
             string sqlString = "UPDATE Tarefas SET Titulo = @Titulo, Descricao = @Descricao, DataCriacao = @DataCriacao, DataFinalizacao = @DataFinalizacao, Status = @Status WHERE Id = @Id";
@@ -68,6 +75,7 @@ namespace GerenciadorTarefas.Domain.Repository
 
             return linhasAlteradas > 0;
         }
+
 
         public async Task<bool> DeleteAsync(Guid id)
         {

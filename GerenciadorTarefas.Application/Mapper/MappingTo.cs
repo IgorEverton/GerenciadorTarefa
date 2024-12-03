@@ -1,6 +1,7 @@
 ﻿using GerenciadorTarefas.Communication.Request;
 using GerenciadorTarefas.Communication.Response;
 using GerenciadorTarefas.Domain.Model;
+using System;
 
 namespace GerenciadorTarefas.Application.Mapper
 {
@@ -25,7 +26,7 @@ namespace GerenciadorTarefas.Application.Mapper
                 Descricao = request.Descricao,
                 DataCriacao = request.DataCriacao,
                 DataFinalizacao = request.DataFinalizacao,
-                Status = request.Status
+                Status = request.Status,
             };
         }
 
