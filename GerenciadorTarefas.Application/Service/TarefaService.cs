@@ -30,10 +30,8 @@ namespace GerenciadorTarefas.Application.Service
         {
 
             var tarefas = await _repository.GetAllAsync(usuarioId, pageNumber, pageSize);
-            Console.WriteLine($"Total de tarefas obtidas do repositório: {tarefas?.Count() ?? 0}");
             
             var totalCount = await _repository.GetTotalCountAsync(usuarioId);
-            Console.WriteLine($"TotalCount obtido: {totalCount}");
             var responseTarefas = tarefas.Select(tarefa =>
             {
                 var mapped = _mapper.MapToResponseTarefa(tarefa);

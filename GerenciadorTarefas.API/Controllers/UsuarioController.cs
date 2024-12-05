@@ -12,7 +12,7 @@ using GerenciadorTarefas.Application.Service;
 namespace GerenciadorTarefas.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("usuarios")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
@@ -24,7 +24,7 @@ namespace GerenciadorTarefas.API.Controllers
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
-        [HttpGet("usuario/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(ResponseUsuario), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserById(Guid id)
@@ -35,7 +35,7 @@ namespace GerenciadorTarefas.API.Controllers
         }
 
 
-        [HttpPost("usuario/registrar")]
+        [HttpPost]
         [ProducesResponseType(typeof(ResponseUsuario), StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateUser([FromBody] RequestUsuario request)
         {
@@ -97,7 +97,7 @@ namespace GerenciadorTarefas.API.Controllers
 
         }
 
-        [HttpPatch("usuario/atualizar/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Update([FromBody] RequestUsuario request)
         {
             if (request == null) return BadRequest("Usuário não pode ser nulo");
@@ -115,7 +115,7 @@ namespace GerenciadorTarefas.API.Controllers
 
         }
 
-        [HttpDelete("usuario/deletar/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

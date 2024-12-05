@@ -17,7 +17,7 @@ namespace GerenciadorTarefas.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("tarefas")]
     public class TarefaController : ControllerBase
     {
         private readonly ITarefaService _tarefaService;
@@ -29,7 +29,7 @@ namespace GerenciadorTarefas.Controllers
         }
 
 
-        [HttpGet("tarefa")]
+        [HttpGet]
         [ProducesResponseType(typeof(PagedResponse<ResponseTarefa>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -85,7 +85,7 @@ namespace GerenciadorTarefas.Controllers
 
         //}
 
-        [HttpPost("inserir")]
+        [HttpPost]
         [ProducesResponseType(typeof(ResponseTarefa), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostTarefa([FromBody]RequestTarefa request)
@@ -118,7 +118,7 @@ namespace GerenciadorTarefas.Controllers
             }
         }
 
-        [HttpPut("atualizar/{id}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -149,7 +149,7 @@ namespace GerenciadorTarefas.Controllers
             }
         }
 
-        [HttpDelete("deletar/{id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteTarefa(Guid id)
