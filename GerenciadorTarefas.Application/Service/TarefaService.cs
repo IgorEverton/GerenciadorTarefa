@@ -30,19 +30,26 @@ namespace GerenciadorTarefas.Application.Service
         {
 
             var tarefas = await _repository.GetAllAsync(usuarioId, pageNumber, pageSize);
-            var TotalCount = await _repository.GetTotalCountAsync(usuarioId);
+            Console.WriteLine($"Total de tarefas obtidas do repositório: {tarefas?.Count() ?? 0}");
+            
+            var totalCount = await _repository.GetTotalCountAsync(usuarioId);
+            Console.WriteLine($"TotalCount obtido: {totalCount}");
+            var responseTarefas = tarefas.Select(tarefa =>
+            {
+                var mapped = _mapper.MapToResponseTarefa(tarefa);
+                Console.WriteLine($"Tarefa mapeada: Titulo={mapped?.Titulo}, Status={mapped?.Status}");
+                return mapped;
+            }).ToList();
 
-            var responseTarefas = tarefas.Select(tarefa => _mapper.MapToResponseTarefa(tarefa));
-
-            return (responseTarefas, TotalCount);
+            return (responseTarefas, totalCount);
         }
 
-        public Task<Tarefa> GetByIdAsync(Guid id, Guid usuarioI)
+        public Task<Tarefa> GetByIdAsync(Guid id)
         {
             return _repository.GetByIdAsync(id);
         }
 
-        public async Task<Tarefa> CreateAsync(RequestTarefa request)
+        public async Task<Tarefa> CreateAsync(RequestTarefa request, Guid usuarioId)
         {
             var resultValidator = await _validator.ValidateAsync(request);
 

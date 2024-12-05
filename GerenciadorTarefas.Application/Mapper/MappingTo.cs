@@ -27,6 +27,7 @@ namespace GerenciadorTarefas.Application.Mapper
                 DataCriacao = request.DataCriacao,
                 DataFinalizacao = request.DataFinalizacao,
                 Status = request.Status,
+                UsuarioId = request.UsuarioId,
             };
         }
 

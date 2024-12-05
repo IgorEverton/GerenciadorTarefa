@@ -75,8 +75,7 @@ namespace GerenciadorTarefas
                     Type = SecuritySchemeType.Http,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "Insira o token JWT no formato: Bearer {seu_token}"
+                    In = ParameterLocation.Header
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement

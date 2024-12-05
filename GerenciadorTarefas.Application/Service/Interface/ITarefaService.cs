@@ -10,8 +10,8 @@ namespace GerenciadorTarefas.Application.Service.Interface
     public interface ITarefaService
     {
         Task<(IEnumerable<ResponseTarefa> Tarefas, int TotalCount)> GetAllAsync(Guid usuarioId, int pageNumber, int pageSize);
-        Task<Tarefa> GetByIdAsync(Guid id, Guid usuarioI);
-        Task<Tarefa> CreateAsync(RequestTarefa tarefa);
+        Task<Tarefa> GetByIdAsync(Guid id);
+        Task<Tarefa> CreateAsync(RequestTarefa tarefa, Guid usuarioId);
         Task<bool> UpdateAsync(Guid usuarioId, RequestTarefa tarefa);
         Task<bool> DeleteAsync(Guid id, Guid usuarioId);
     }

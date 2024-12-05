@@ -60,16 +60,14 @@ namespace GerenciadorTarefas.Application.Service
             var usuario = await _repository.GetByIdAsync(request.Id);
 
             if (usuario == null)
-                return false; // Usuário não encontrado
+                return false;
 
-            // Atualiza as propriedades que foram enviadas na requisição.
             if (!string.IsNullOrEmpty(request.Name)) usuario.Name = request.Name;
             if (!string.IsNullOrEmpty(request.Email)) usuario.Email = request.Email;
             if (!string.IsNullOrEmpty(request.Password)) usuario.Password = request.Password;
             if (request.DataCriacao.HasValue) usuario.DataCriacao = request.DataCriacao.Value;
             if (request.IsActive.HasValue) usuario.IsActive = request.IsActive.Value;
 
-            // Atualiza no banco de dados.
             await _repository.UpdateAsync(usuario);
 
             return true;

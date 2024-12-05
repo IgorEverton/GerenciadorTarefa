@@ -4,6 +4,7 @@ using GerenciadorTarefas.Domain.Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GerenciadorTarefas.Domain.Repository
@@ -17,9 +18,10 @@ namespace GerenciadorTarefas.Domain.Repository
         }
 
 
-        public async Task<IEnumerable<Tarefa>> GetAllAsync(Guid usuarioId, int pageNumber, int pageSize)
+        public async Task<IEnumerable<Tarefa>>GetAllAsync(Guid usuarioId, int pageNumber, int pageSize)
         {
 
+            Console.WriteLine($"Consulta de tarefas para o usuário: {usuarioId}, Pág.: {pageNumber}, Tamanho: {pageSize}");
             var offset = (pageNumber - 1) * pageSize;
 
             var sqlQuery = @"
@@ -29,7 +31,9 @@ namespace GerenciadorTarefas.Domain.Repository
                 OFFSET @Offset ROWS
                 FETCH NEXT @PageSize ROWS ONLY";
 
-            return await _connection.QueryAsync<Tarefa>(sqlQuery, new { UsuarioId = usuarioId, Offset = offset, PageSize = pageSize });
+            var tarefas = await _connection.QueryAsync<Tarefa>(sqlQuery, new { UsuarioId = usuarioId, Offset = offset, PageSize = pageSize });
+            Console.WriteLine($"Tarefas retornadas do banco: {tarefas?.Count()}");
+            return tarefas;
         }
 
 
@@ -40,22 +44,26 @@ namespace GerenciadorTarefas.Domain.Repository
         }
 
 
-        public async Task<Tarefa> GetByIdAsync(Guid usuarioId)
+        public async Task<Tarefa> GetByIdAsync (Guid id)
         {
             string sqlQuery = "SELECT * FROM Tarefas WHERE Id = @Id";
-            return await _connection.QuerySingleOrDefaultAsync<Tarefa>(sqlQuery, new { UsuarioId = usuarioId });
+            return await _connection.QuerySingleOrDefaultAsync<Tarefa>(sqlQuery, new { Id = id });
         }
 
 
         public async Task<Tarefa> CreateAsync(Tarefa tarefa)
         {
             tarefa.Id = Guid.NewGuid();
-            string sqlQuery = "INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status) " +
-                "VALUES (@Id, @Titulo, @Descricao, @DataCriacao, @DataFinalizacao, @Status)";
+            string sqlQuery = "INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status, UsuarioId) " +
+                "VALUES (@Id, @Titulo, @Descricao, @DataCriacao, @DataFinalizacao, @Status, @UsuarioId)";
 
             var linhasAfetadas = await _connection.ExecuteAsync(sqlQuery, tarefa);
-            return linhasAfetadas > 0 ? tarefa : null;
+            if (linhasAfetadas == 0)
+            {
+                throw new Exception("Falha ao criar a tarefa no banco de dados.");
+            }
 
+            return tarefa;
         }
 
 
@@ -84,7 +92,7 @@ namespace GerenciadorTarefas.Domain.Repository
 
             if (tarefaEncontrada < 0) return false;
 
-            string sqlQuery = "DELETE FROM Tarefas WHERE ID = @id";
+            string sqlQuery = "DELETE FROM Tarefas WHERE Id = @id";
             var linhasAfetadas = await _connection.ExecuteAsync(sqlQuery, new { id });
 
             return linhasAfetadas > 0;
