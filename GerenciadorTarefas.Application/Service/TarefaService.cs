@@ -58,7 +58,7 @@ namespace GerenciadorTarefas.Application.Service
                 throw new ValidationException(resultValidator.Errors);
             }
             var tarefa = _mapper.MapToTarefa(request);
-
+            tarefa.UsuarioId = usuarioId;
             return await _repository.CreateAsync(tarefa);
         }
 

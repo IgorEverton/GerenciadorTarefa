@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using GerenciadorTarefas.Domain.Model;
 using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace GerenciadorTarefas.Controllers
 {
@@ -37,17 +38,15 @@ namespace GerenciadorTarefas.Controllers
         {
             try
             {
-                var userId = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
+                //var userId = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                Console.WriteLine($"UsuarioId obtido: {userId}");
                 if (string.IsNullOrEmpty(userId))
                 {
                     return Unauthorized("Usuário não autenticado ou ID inválido.");
                 }
 
                 var (tarefas, totalCount) = await _tarefaService.GetAllAsync(Guid.Parse(userId), pageNumber, pageSize);
-                Console.WriteLine($"Tarefas encontradas: {tarefas.Count()}");
 
                 if (tarefas == null || !tarefas.Any())
                 {
@@ -55,7 +54,6 @@ namespace GerenciadorTarefas.Controllers
                 }
 
                 var response = new PagedResponse<ResponseTarefa>(tarefas, pageNumber, pageSize, totalCount);
-
                 return Ok(response);
             }
             catch (Exception ex) 
@@ -94,8 +92,10 @@ namespace GerenciadorTarefas.Controllers
         {
 
             if (request == null) return BadRequest("Campos não podem ser nulos");
-            var userId = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
-            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var userId = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine($"chave recuperada{userId}");
             if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var usuarioId))
             {
                 return Unauthorized("Usuário não autenticado ou ID inválido.");
@@ -128,8 +128,8 @@ namespace GerenciadorTarefas.Controllers
 
             try
             {
-                var userId = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
-                //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                //var userId = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
                 if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var usuarioId))
                 {
                     return Unauthorized("Usuário não autenticado ou ID inválido.");
@@ -156,8 +156,8 @@ namespace GerenciadorTarefas.Controllers
         {
             try
             {
-                var userId = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
-                //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                //var userId = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var usuarioId))
                 {
                     return Unauthorized("Usuário não autenticado ou ID inválido.");
