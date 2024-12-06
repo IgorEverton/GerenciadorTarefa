@@ -1,14 +1,14 @@
 --OBTER AS TAREFAS DO USUÁRIO
-SELECT u.Name AS NomeUsuario, t.Titulo AS TAREFA
-FROM Usuarios u
-INNER JOIN Tarefas t ON u.Id = t.UsuarioId
+SELECT usuario.Name AS NomeUsuario, tarefa.Titulo AS TAREFA
+FROM Usuarios usuario
+INNER JOIN Tarefas tarefa ON usuario.Id = tarefa.UsuarioId
 
 --LISTAR O NÚMERO DE USUÁRIOS E A QUANTIDADE DE TAREFAS DE CADA
-SELECT u.Name AS NomeUsuario, COUNT(t.Id) AS QuantidadeTarefas
-FROM Usuarios u
-LEFT JOIN Tarefas t ON u.Id = t.UsuarioId
+SELECT usuario.Name AS NomeUsuario, COUNT(tarefa.Id) AS QuantidadeTarefas
+FROM Usuarios usuario
+LEFT JOIN Tarefas tarefa ON usuario.Id = tarefa.UsuarioId
 
 --RETORNAR USUÁRIO QUE NÃO TEM TAREFA ATRIBUIDA
-SELECT u.Name AS NomeUsuario
-FROM Usuarios u
-LEFT JOIN Tarefas t ON u.Id = t.UsuarioId
+SELECT usuario.Name AS NomeUsuario
+FROM Usuarios usuario
+LEFT JOIN Tarefas tarefa ON usuario.Id = tarefa.UsuarioId

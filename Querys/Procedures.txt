@@ -5,16 +5,17 @@ CREATE PROCEDURE AddTarefa
 	@Descricao NVARCHAR(255),
 	@DataCriacao DATE,
 	@DataFinalizacao DATE,
-	@Status BIT
+	@Status BIT,
+	@UsuarioId UNIQUEIDENTIFIER
 AS
 BEGIN
-	INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status)
-	VALUES (@iD, @Titulo, @Descricao, GETDATE(), @DataFinalizacao, @Status);
+	INSERT INTO Tarefas (Id, Titulo, Descricao, DataCriacao, DataFinalizacao, Status, UsuarioId)
+	VALUES (@iD, @Titulo, @Descricao, GETDATE(), @DataFinalizacao, @Status, @UsuarioId);
 END
 
 --RODAR A PROCEDURE
 DECLARE @Id UNIQUEIDENTIFIER = NEWID();
-EXEC AddTarefa @Id, 'Nova Tarefa', 'Descrição da tarefa', GETDATE(), '2024-12-31T00:00:00', 1;
+EXEC AddTarefa @Id, 'Nova Tarefa', 'Descrição da tarefa', GETDATE(), '2024-12-31T00:00:00', 1, '135E2135-709A-48B2-8AA7-4428A2217436';
 
 
 
